@@ -36,7 +36,14 @@ public class GlobalKeyListener implements NativeKeyListener {
 
         if (cTriggered && ctrlTriggered) {
 //            System.out.println("Download triggered");
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException interruptedException) {
+                interruptedException.printStackTrace();
+            }
             downloader.downloadClipboardLink();
+            ctrlTriggered = false;
+            cTriggered = false;
         }
 
 
