@@ -1,5 +1,6 @@
-package com.dermacon.downloader;
+package com.dermacon.downloader.logic;
 
+import com.dermacon.downloader.exception.InvalidClipboardException;
 import com.github.kiulian.downloader.YoutubeDownloader;
 import com.github.kiulian.downloader.downloader.YoutubeProgressCallback;
 import com.github.kiulian.downloader.downloader.request.RequestVideoFileDownload;
@@ -19,11 +20,21 @@ public class Downloader {
 
     private final static int TITLE_DOWNLOAD_PREV_LEN = 10;
     private final static String URL_REGEX = ".*youtube.*?v=(.*)&list.*|.*youtube.*?v=(.*)";;
+    private final static String VIDEO_PATH = "video";;
+    private final static String AUDIO_PATH = "audio";;
+
+    private final AudioConverter audioConverter;
+
+    public Downloader(AudioConverter audioConverter) {
+        this.audioConverter = audioConverter;
+    }
 
     public void downloadClipboardLink() {
         try {
             String link = readClipboardContent();
-            downloadAudio(extractId(link));
+            File video = downloadVideo(extractId(link));
+            File audio = createEmptyOutput(video);
+            audioConverter.convertMP4ToMP3(video, audio);
         } catch (InvalidClipboardException e) {
             System.err.println(e.getMessage());
         }
@@ -54,7 +65,7 @@ public class Downloader {
         return out;
     }
 
-    private static void downloadAudio(String link) {
+    private static File downloadVideo(String link) {
         YoutubeDownloader downloader = new YoutubeDownloader();
 
         RequestVideoInfo request = new RequestVideoInfo(link);
@@ -85,13 +96,19 @@ public class Downloader {
                 .renameTo(video.details().title()) // by default file name will be same as video title on youtube
                 .overwriteIfExists(true)
                 .async();
-        downloader.downloadVideoFile(audioReq);
+        Response<File> downloadResp = downloader.downloadVideoFile(audioReq);
+        return downloadResp.data();
     }
 
     private static String createTitleLog(String title) {
         return title.length() < TITLE_DOWNLOAD_PREV_LEN
                 ? title
                 : title.substring(0, TITLE_DOWNLOAD_PREV_LEN) + "...";
+    }
+
+    private static File createEmptyOutput(File input) {
+        new File(AUDIO_PATH).mkdir();
+        return new File(AUDIO_PATH + File.separator + input.getName() + ".mp3");
     }
 
 }

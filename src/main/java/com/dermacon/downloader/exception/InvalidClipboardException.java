@@ -1,4 +1,4 @@
-package com.dermacon.downloader;
+package com.dermacon.downloader.exception;
 
 public class InvalidClipboardException extends Exception {
 

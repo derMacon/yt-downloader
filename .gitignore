@@ -146,3 +146,6 @@ test-files/
 
 /target/
 /videos/
+/audio/
+**.mp3
+**.mp4

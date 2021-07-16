@@ -1,33 +1,53 @@
 package com.dermacon.downloader;
 
+import it.sauronsoftware.jave.AudioAttributes;
+import it.sauronsoftware.jave.Encoder;
+import it.sauronsoftware.jave.EncoderException;
+import it.sauronsoftware.jave.EncodingAttributes;
+
+import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TestMain {
 
     public static void main(String[] args) {
-        String test = "https://www.youtube.com/watch?v=9ju-Qj8xFQk";
-//        String test = "https://www.youtube.com/watch?v=9ju-Qj8xFQk&list=RDMM&start_radio=1&rv=yA2U7fl0xb8";
-//        String test = "https://www.youtube.com/watch?v=9ju-Qj8xFQk&list=RDMM&start_radio=1&rv" +
-//                "=yA2U7fl0xb8"    ;
+        Encoder forMusic = new Encoder();
 
-//        String regex = ".*youtube.*?v=(.*)|.*youtube.*?v=(.*)&list.*";
-        String regex = ".*youtube.*?v=(.*)&list.*|.*youtube.*?v=(.*)";
-//        String regex = ".*youtube.*?v=(.*)";
-        System.out.println(test.matches(regex));
-        // Create a Pattern object
-        Pattern r = Pattern.compile(regex);
+        EncodingAttributes specifications = new EncodingAttributes();
+        specifications.setFormat("mp3");
+        //audioAttribute obj
+        AudioAttributes a = new AudioAttributes();
+        a.setVolume(256);//default
+        a.setCodec("mp2");
 
-        // Now create matcher object.
-        Matcher m = r.matcher(test);
+        specifications.setAudioAttributes(a);
 
-        if (m.find()) {
-            System.out.println("Found value: " + m.group(0));
-            System.out.println("Found value: " + m.group(1));
-            System.out.println("Found value: " + m.group(2));
-        } else {
-            System.out.println("NO MATCH");
+        try{
+            forMusic.encode(new File("test.mp4"), new File("test.mp3"), specifications);
+        }
+        catch(EncoderException ex){
+            ex.printStackTrace();
         }
     }
 
+    public static void convertMp4ToMp3(File source, File output){
+        Encoder forMusic = new Encoder();
+
+        EncodingAttributes specifications = new EncodingAttributes();
+        specifications.setFormat("mp3");
+        //audioAttribute obj
+        AudioAttributes a = new AudioAttributes();
+        a.setVolume(256);//default
+        a.setCodec("mp2");
+
+        specifications.setAudioAttributes(a);
+
+        try{
+            forMusic.encode(source, output, specifications);
+        }
+        catch(EncoderException ex){
+            ex.printStackTrace();
+        }
+    }
 }

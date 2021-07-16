@@ -1,5 +1,8 @@
 package com.dermacon.downloader;
 
+import com.dermacon.downloader.hook.GlobalKeyListener;
+import com.dermacon.downloader.logic.AudioConverter;
+import com.dermacon.downloader.logic.Downloader;
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
 
@@ -22,7 +25,9 @@ public class ApplicationMain {
 			System.exit(1);
 		}
 
-		GlobalScreen.addNativeKeyListener(new GlobalKeyListener(new Downloader()));
+		AudioConverter audioConverter = new AudioConverter();
+		Downloader downloader = new Downloader(audioConverter);
+		GlobalScreen.addNativeKeyListener(new GlobalKeyListener(downloader));
 	}
 
 }

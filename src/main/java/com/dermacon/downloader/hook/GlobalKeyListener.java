@@ -1,5 +1,6 @@
-package com.dermacon.downloader;
+package com.dermacon.downloader.hook;
 
+import com.dermacon.downloader.logic.Downloader;
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
 import org.jnativehook.keyboard.NativeKeyEvent;

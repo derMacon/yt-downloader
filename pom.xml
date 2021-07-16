@@ -13,6 +13,10 @@
     </properties>
     <repositories>
         <repository>
+            <id>my</id>
+            <url>file://${basedir}/my-repo</url>
+        </repository>
+        <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
@@ -24,15 +28,40 @@
             <artifactId>jnativehook</artifactId>
             <version>2.0.2</version>
         </dependency>
-
         <dependency>
             <groupId>com.github.sealedtx</groupId>
             <artifactId>java-youtube-downloader</artifactId>
             <version>3.0.1</version>
         </dependency>
+        <dependency>
+            <groupId>it.sauronsoftware</groupId>
+            <artifactId>jave</artifactId>
+            <version>1.0.2</version>
+<!--            <scope>system</scope>-->
+<!--            <systemPath>${project.basedir}/src/main/resources/jave-1.0.2.jar</systemPath>-->
+        </dependency>
     </dependencies>
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <groupId>it.sauronsoftware</groupId>
+                            <artifactId>jave</artifactId>
+                            <version>1.0.2</version>
+                            <packaging>jar</packaging>
+                            <file>${basedir}/lib/jave-1.0.2.jar</file>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -86,7 +115,6 @@
                                 <mainClass>com.dermacon.downloader.ApplicationMain</mainClass>
                                 <preCp>anything</preCp>
                             </classPath>
-                            <!--                        <icon>application.ico</icon>-->
                             <jre>
                                 <minVersion>1.7.0</minVersion>
                                 <jdkPreference>preferJre</jdkPreference>
